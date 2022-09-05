@@ -9,11 +9,11 @@ omega = (2 * np.pi) / T
 
 
 def model1(t, a, b):
-    return a * t + b
+    return b * t + a
 
 
 def model2(t, a, b, c):
-    return a * t**2 + b * t + c
+    return c * t**2 + b * t + a
 
 
 def model3a(t, a, b, Ac, As):
@@ -32,7 +32,7 @@ def model3b(t, a, b, Ac, As):
     )
 
 
-def model3c(t, a, b, Ac1, As1, Ac2, As2):#, Ac3, As3):
+def model3(t, a, b, Ac1, As1, Ac2, As2):#, Ac3, As3):
     return (
         model1(t, a, b)
         + Ac1 * np.cos(omega[0] * t)
@@ -53,3 +53,11 @@ def model4(t, a, b, c, Ac1, As1, Ac2, As2):
         + Ac2 * np.cos(omega[1] * t)
         + As2 * np.sin(omega[1] * t)       
     )
+
+
+def model5(t, a1, a2, b1, b2, tsplit):
+    #tsplit = 1985
+    fac = (np.sign(t - tsplit) + 1) / 2
+    #print(fac)
+    
+    return (1 - fac) * model1(t, a1, b1) + fac * model1(t, a2, b2)
