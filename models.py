@@ -55,9 +55,15 @@ def model4(t, a, b, c, Ac1, As1, Ac2, As2):
     )
 
 
-def model5(t, a1, a2, b1, b2, tsplit):
+def model5(t, a1, a2, b, delta_tsplit):
     #tsplit = 1985
-    fac = (np.sign(t - tsplit) + 1) / 2
-    #print(fac)
-    
-    return (1 - fac) * model1(t, a1, b1) + fac * model1(t, a2, b2)
+    fac = (np.sign(t - delta_tsplit) + 1) / 2
+
+    return (1 - fac) * (a1 * (t - delta_tsplit) + b) + fac * (a2 * (t - delta_tsplit) + b)
+
+
+def model6(t, a, b, c):
+    """
+    Following KNMI TR318
+    """
+    return  (a * t) + (b * t**2) + (c * t**3)
