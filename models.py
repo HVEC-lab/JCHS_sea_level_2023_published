@@ -62,8 +62,16 @@ def model5(t, a1, a2, b, delta_tsplit):
     return (1 - fac) * (a1 * (t - delta_tsplit) + b) + fac * (a2 * (t - delta_tsplit) + b)
 
 
-def model6(t, a, b, c):
+def model6(t, p0, p1, p2, p3, Ac0, As0, Ac1, As1, t0):
     """
-    Following KNMI TR318
+    Everything is in
     """
-    return  (a * t) + (b * t**2) + (c * t**3)
+    fac = (np.sign(t - t0) + 1) / 2
+
+    linear = p0 + p1 * t
+    jerky = fac * (((1/2) * p2 * (t - t0)**2) + ((1/6) * p3 * (t - t0)**3))
+    oscillate = (
+        Ac0 * np.cos(omega[0] * t) + As0 * np.sin(omega[0] * t) +
+        Ac1 * np.cos(omega[1] * t) + As1 * np.sin(omega[1] * t)
+    )
+    return  linear + jerky + oscillate
