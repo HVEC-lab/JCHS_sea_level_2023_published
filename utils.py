@@ -4,6 +4,7 @@ HVEC, 2022
 """
 
 import os
+import copy as cp
 import sqlite3 as sq
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -105,6 +106,29 @@ def read_data_ipcc():
     df = pd.read_sql(sql, cnxn)
     cnxn.close()
 
+    return df
+
+
+def process_ipcc(df, k):
+    """
+    Select and process ipcc data
+    """
+    # Put name as first column
+    cols = df.columns.tolist()
+    cols = cols[-1:] + cols[:-1]
+    df = df[cols]
+
+    # add parameters
+    df['90%_band'] = df['90%_high'] - df['median']
+    df['sigma'] = (df['90%_band'] / k).round(2)
+
+    # Brush up
+    df.sort_values(by = 'name', inplace = True)
+    df = df.drop(columns = [
+        'psmsl_id', 'process', 'confidence', '90%_low', '90%_high'])
+    df['name'] = df['name'].str.title()
+
+    df[['median', 'sigma', '90%_band']] = 100 * df[['median', 'sigma', '90%_band']]
     return df
 
 
