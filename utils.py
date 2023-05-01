@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import hvec_support
+from constants import PICTURES
 
 
 # Settings
@@ -52,7 +53,7 @@ def read_data_rws(constit_set):
 
     df.columns = df.columns.str.replace('_ampl', '')
 
-    df = df[df['set'] == constit_set]
+    df = df[df['const_set'] == constit_set]
 
     df = df[df['year'] < 2022]
 
@@ -67,7 +68,7 @@ def read_data_psmsl():
     # Connect database
     conn_str = os.getenv('DATAPATH') + 'PSMSL.db'
     cnxn = sq.connect(conn_str, detect_types = True)
-    
+
     # Read table with observed water levels; complete years only
     sql = (
         "SELECT name, time, level, type, freq FROM data "
@@ -81,7 +82,7 @@ def read_data_psmsl():
     psmsl = pd.read_sql(sql, cnxn)
     cnxn.close()
 
-    psmsl['level'] = psmsl['level']/1000
+    psmsl['level'] = psmsl['level']
 
     return psmsl
 
@@ -150,7 +151,7 @@ def graph_Rsqadj(df):
 
     plt.xlabel('Year')
     plt.tight_layout()
-    plt.savefig(r'../pics/Rsq_all.jpg')
+    plt.savefig(f'{PICTURES}/Rsq_all.jpg')
     return
 
 
@@ -203,7 +204,7 @@ def graph_z0(df, psmsl):
     plt.xlabel('Year')
     plt.legend()
     plt.tight_layout()
-    plt.savefig(r'../pics/MSL_all.jpg')
+    plt.savefig(f'{PICTURES}/MSL_all.jpg')
     return
 
 
@@ -238,5 +239,10 @@ def graph_amplitudes(df):
         ax[i].set_ylim(mu-0.6, mu+0.6)
     ax[i].legend(loc = 'best')
     plt.tight_layout()
-    plt.savefig(r'../pics/M2+S2_all.jpg')
+    plt.savefig(f'{PICTURES}/M2+S2_all.jpg')
     return
+
+
+#====================
+if __name__ == '__main__':
+    read_data_rws(constit_set = 'Ftested3')

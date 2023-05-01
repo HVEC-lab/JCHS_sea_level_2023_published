@@ -1,0 +1,6 @@
+pandas
+matplotlib
+numpy
+scipy
+sigfig
+hvec_support @ git+https://github.com/hvec-lab/hvec_support
