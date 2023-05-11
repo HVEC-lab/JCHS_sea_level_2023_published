@@ -40,3 +40,7 @@ Literature/Southern_North_Sea_storm_surge_event_of_5_December.pdf
 Literature/SSRN-id4385979.pdf
 Literature/trends_uk_revisited.pdf
 Literature/Wahl_observed_North_Sea.pdf
+__pycache__/constants.cpython-311.pyc
+.gitignore
+tests/__pycache__/test_utide.cpython-311-pytest-7.3.1.pyc
+__pycache__/utils.cpython-311.pyc
