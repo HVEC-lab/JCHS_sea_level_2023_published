@@ -101,8 +101,9 @@ def read_data_ipcc():
         "'DEN HELDER', 'IJMUIDEN',  "
         "'HOEK VAN HOLLAND', 'VLISSINGEN') "
         "AND (process == 'totalrates') "
-#        "AND scenario IN ('ssp126') "
-        "AND (confidence == 'medium') ")
+        "AND scenario IN ('ssp126', 'ssp245') "
+        "AND (confidence == 'medium') "
+        "AND (year == 2020) ")
 
     df = pd.read_sql(sql, cnxn)
     cnxn.close()
@@ -121,7 +122,7 @@ def process_ipcc(df, k):
 
     # add parameters
     df['90%_band'] = df['90%_high'] - df['median']
-    df['sigma'] = (df['90%_band'] / k).round(2)
+    #df['sigma'] = (df['90%_band'] / k).round(2)
 
     # Brush up
     df.sort_values(by = 'name', inplace = True)
@@ -129,7 +130,7 @@ def process_ipcc(df, k):
         'psmsl_id', 'process', 'confidence', '90%_low', '90%_high'])
     df['name'] = df['name'].str.title()
 
-    df[['median', 'sigma', '90%_band']] = 100 * df[['median', 'sigma', '90%_band']]
+    df[['median', 'sigma', '90%_band']] = 100 * 1000 * df[['median', 'sigma', '90%_band']]
     return df
 
 
@@ -221,28 +222,85 @@ def graph_amplitudes(df):
         data = data[df['count'] < Nmn]
 
         ax[i].plot(
-            data['year'], data['M2'] + data['S2'], 'rs',
-            label = 'Summed amplitude M2 and S2, less then '+ str(Nmn) + ' datapoints per year',
+            data['year'], data['M2+S2'], 'rs',
+            label = 'Summed amplitude M2 and S2, N < '+ str(Nmn),
             markersize = 8, mfc = 'none')
 
         data = df[np.logical_and(df['naam'] == nm, df['count'] >= Nmn)]
 
         ax[i].plot(
-            data['year'], data['M2'], 'rs',
-            label = 'Summed amplitude M2 and S2, more then '+ str(Nmn) + ' datapoints per year',
+            data['year'], data['M2+S2'], 'rs',
+            label = 'Summed amplitude M2 and S2, N < '+ str(Nmn),
             markersize = 8)
+
+        data = df[df['naam'] == nm]
+        
+        ax[i].plot(
+            data['year'], data['M2'], 'kx',
+            label = 'Amplitude of M2'
+        )
+
+        ax[i].plot(
+            data['year'], data['S2'], 'b^',
+            label = 'Amplitude of S2'
+        )
 
         ax[i].set_ylabel('Amplitude (m)')
         ax[i].set_xlabel('Year')
 
         ax[i].title.set_text(nm + ", the Netherlands; tide")
-        ax[i].set_ylim(mu-0.6, mu+0.6)
+        ax[i].set_ylim(0, mu+0.6)
+        
+        if nm in ['Den Helder', 'Harlingen']:
+            ax[i].fill_betweenx(y = [0, mu+0.6], x1 = 1928, x2 = 1932, color = 'gray', alpha = 0.5)
+            # ax[i].vlines(x = 1940, ymin = 0, ymax = mu+0.6, linestyle = '--')
+        
     ax[i].legend(loc = 'best')
     plt.tight_layout()
     plt.savefig(f'{PICTURES}/M2+S2_all.jpg')
     return
 
 
+def graph_windeffect(df):
+    """
+    Graph of calculated wind effect
+    """
+    _, ax = plt.subplots(nrows = 6, ncols = 1, sharex = True, sharey = False, figsize = figsize)
+    for i, nm in enumerate(names):
+        data = df[df['naam'] == nm]
+        
+        mu = (data['smean']).mean()
+
+        data = data[df['count'] < Nmn]
+
+        ax[i].plot(
+            data['year'], data['smean'], 'rs',
+            label = 'Yearly mean wind effect, N < '+ str(Nmn),
+            markersize = 8, mfc = 'none')
+
+        data = df[np.logical_and(df['naam'] == nm, df['count'] >= Nmn)]
+
+        ax[i].plot(
+            data['year'], data['smean'], 'rs',
+            label = 'Yearly mean wind effect, N < '+ str(Nmn),
+            markersize = 8)
+
+        data = df[df['naam'] == nm]
+        
+        ax[i].set_ylabel('Difference with tide (m)')
+        ax[i].set_xlabel('Year')
+
+        ax[i].title.set_text(nm + ", the Netherlands; wind effect")
+        ax[i].set_ylim(mu - 0.1, mu+0.1)
+                
+    ax[i].legend(loc = 'best')
+    plt.tight_layout()
+    plt.savefig(f'{PICTURES}/windeffect_all.jpg')
+    return
+
+
 #====================
 if __name__ == '__main__':
-    read_data_rws(constit_set = 'Ftested3')
+    df = read_data_rws(constit_set = 'Ftested3')
+    graph_amplitudes(df)
+    plt.show()
