@@ -4,7 +4,7 @@ Empirical sea level models
 
 import numpy as np
 
-T = np.array([8.85, 18.61])  # Period of multi-year astronomical cycles
+T = np.array([8.85 / 1, 18.61])  # Period of multi-year astronomical cycles
 omega = (2 * np.pi) / T
 
 
