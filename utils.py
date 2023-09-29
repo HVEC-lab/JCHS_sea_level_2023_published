@@ -37,7 +37,7 @@ def read_data_rws(constit_set):
     Read table with observed water levels; complete years only
     """
     # Connect database
-    conn_str = os.getenv('DATAPATH') + 'RWS_processed.db'
+    conn_str = os.getenv('DATAPATH') + 'RWS_JCHS.db'
     cnxn = sq.connect(conn_str, detect_types = True)
 
     sql = (
@@ -111,14 +111,14 @@ def read_data_ipcc():
     return df
 
 
-def process_ipcc(df, k):
+def process_ipcc(df):
     """
     Select and process ipcc data
     """
     # Put name as first column
     cols = df.columns.tolist()
     cols = cols[-1:] + cols[:-1]
-    df = df[cols]
+    df = cp.deepcopy(df[cols])
 
     # add parameters
     df['90%_band'] = df['90%_high'] - df['median']
