@@ -11,25 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import hvec_support
-from constants import PICTURES
+from constants import *
 
 
 # Settings
 plt.rcParams['axes.grid'] = True
-figsize = (20, 24)
-
-
-names = [
-    'Delfzijl',
-    'Harlingen',
-    'Den Helder',
-    'IJmuiden',
-    'Hoek van Holland',
-    'Vlissingen'
-]
-
-
-Nmn = 2910
 
 
 def read_data_rws(constit_set):
