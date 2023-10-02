@@ -166,12 +166,12 @@ def graph_z0(df, psmsl):
 
         ax[i].plot(
             data['year'], data['z0'], 'ro',
-            label = 'Mean sea level from tide analysis. N > ' + str(Nmn) + ' points per year',
+            label = 'Mean sea level from tide analysis. N >= ' + str(Nmn) + ' points per year',
             markersize = 8)
 
         ax[i].plot(
             data['year'], data['zmean'], 'k^',
-            label = 'Arithmetic mean sea level. N > ' + str(Nmn) + ' points per year',
+            label = 'Arithmetic mean sea level. N >= ' + str(Nmn) + ' points per year',
             markersize = 8)
 
 
@@ -216,7 +216,7 @@ def graph_amplitudes(df):
 
         ax[i].plot(
             data['year'], data['M2+S2'], 'rs',
-            label = 'Summed amplitude M2 and S2, N < '+ str(Nmn),
+            label = 'Summed amplitude M2 and S2, N >= '+ str(Nmn),
             markersize = 8)
 
         data = df[df['naam'] == nm]
@@ -268,7 +268,7 @@ def graph_windeffect(df):
 
         ax[i].plot(
             data['year'], data['smean'], 'rs',
-            label = 'Yearly mean wind effect, N < '+ str(Nmn),
+            label = 'Yearly mean wind effect, N >= '+ str(Nmn),
             markersize = 8)
 
         data = df[df['naam'] == nm]
