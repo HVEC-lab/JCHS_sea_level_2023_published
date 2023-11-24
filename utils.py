@@ -23,7 +23,9 @@ def read_data_rws(constit_set):
     Read table with observed water levels; complete years only
     """
     # Connect database
-    conn_str = os.getenv('DATAPATH') + 'RWS_JCHS.db'
+    path = r'./Data'
+    file = 'RWS_JCHS.db'
+    conn_str = os.path.join(path, file)
     cnxn = sq.connect(conn_str, detect_types = True)
 
     sql = (
