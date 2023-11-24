@@ -80,7 +80,8 @@ def read_data_ipcc():
     Read specified data IPCC
     """
     # Connect database
-    conn_str = os.getenv('DATAPATH') + 'IPCC.db'
+    path = r'./Data'
+    conn_str = os.path.join(path, 'IPCC.db')
     cnxn = sq.connect(conn_str, detect_types = True)
     sql = (
         "SELECT * "
